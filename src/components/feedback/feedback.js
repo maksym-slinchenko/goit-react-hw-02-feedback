@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 
 export default class Feedback extends Component {
   state = {
@@ -11,6 +10,17 @@ export default class Feedback extends Component {
   handleFeedbackCounter = stateName => {
     const prevState = this.state[stateName];
     this.setState({ [stateName]: prevState + 1 });
+  };
+
+  countTotalFeedback = state => {
+    const arrey = Object.values(state);
+    return arrey.reduce((acc, value) => acc + value, 0);
+  };
+
+  countPositiveFeedbackPercentage = stateName => {
+    return `${Math.round(
+      (this.state[stateName] / this.countTotalFeedback(this.state)) * 100,
+    )}%`;
   };
 
   render() {
@@ -45,11 +55,15 @@ export default class Feedback extends Component {
         >
           Bad
         </button>
-
         <h1>Statistics</h1>
         <p>Good: {good}</p>
         <p>Neutral: {neutral}</p>
         <p>Bad: {bad}</p>
+        <p>
+          Total:
+          {this.countTotalFeedback(this.state)}
+        </p>
+        <p>Positiv feedback: {this.countPositiveFeedbackPercentage('good')}</p>
       </>
     );
   }
